@@ -1,0 +1,32 @@
+name: Radar de Empleo Healthtech
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 07:00 UTC (8:00 AM hora de Alicante)
+    - cron: '0 7 * * *'
+  workflow_dispatch: # Este botón te permitirá ejecutarlo manualmente cuando quieras probarlo
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el código de tu repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip' # Acelera la instalación de librerías
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+
+      - name: Ejecutar el script de extracción
+        env:
+          # Estas variables tiran directamente de los Secretos que configuraste
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python main.py
