@@ -23,6 +23,10 @@ jobs:
       - name: Instalar dependencias
         run: |
           pip install -r requirements.txt
+          git config user.name "job-radar"
+          git config user.email "job-radar@users.noreply.github.com"
+          git add seen.json
+          git diff --cached --quiet || { git commit -m "update seen"; git push; }
 
       - name: Ejecutar el script de extracción
         env:
